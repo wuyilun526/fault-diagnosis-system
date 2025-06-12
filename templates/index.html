@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故障诊断系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">故障诊断系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="diagnosis-tab" data-bs-toggle="tab" data-bs-target="#diagnosis" type="button" role="tab" aria-controls="diagnosis" aria-selected="true">故障诊断</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="knowledge-tab" data-bs-toggle="tab" data-bs-target="#knowledge" type="button" role="tab" aria-controls="knowledge" aria-selected="false">知识库管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="tab-content">
+            <!-- 故障诊断页面 -->
+            <div class="tab-pane fade show active" id="diagnosis" role="tabpanel" aria-labelledby="diagnosis-tab">
+                <h2>故障诊断</h2>
+                <form id="diagnosisForm" class="mt-4">
+                    <div class="mb-3">
+                        <label for="alertInfo" class="form-label">告警信息 <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="alertInfo" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="metricsInfo" class="form-label">指标信息（选填）</label>
+                        <textarea class="form-control" id="metricsInfo" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logInfo" class="form-label">日志信息（选填）</label>
+                        <textarea class="form-control" id="logInfo" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">提交诊断</button>
+                </form>
+                <div id="diagnosisResult" class="mt-4" style="display: none;">
+                    <h3>诊断结果</h3>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">故障分类</h5>
+                            <p id="resultCategory" class="card-text"></p>
+                            <h5 class="card-title">分析结果</h5>
+                            <p id="resultAnalysis" class="card-text"></p>
+                            <h5 class="card-title">解决方案</h5>
+                            <p id="resultSolution" class="card-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 知识库管理页面 -->
+            <div class="tab-pane fade" id="knowledge" role="tabpanel" aria-labelledby="knowledge-tab">
+                <h2>知识库管理</h2>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h3>故障分类</h3>
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                            添加分类
+                        </button>
+                        <div id="categoryList" class="list-group"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>故障知识</h3>
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#knowledgeModal">
+                            添加知识
+                        </button>
+                        <div id="knowledgeList" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分类模态框 -->
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加故障分类</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="categoryForm">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">分类名称</label>
+                            <input type="text" class="form-control" id="categoryName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryDescription" class="form-label">描述</label>
+                            <textarea class="form-control" id="categoryDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveCategory">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 知识模态框 -->
+    <div class="modal fade" id="knowledgeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加故障知识</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="knowledgeForm">
+                        <div class="mb-3">
+                            <label for="knowledgeCategory" class="form-label">故障分类</label>
+                            <select class="form-select" id="knowledgeCategory" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="knowledgeTitle" class="form-label">标题</label>
+                            <input type="text" class="form-control" id="knowledgeTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="knowledgeSymptoms" class="form-label">症状描述</label>
+                            <textarea class="form-control" id="knowledgeSymptoms" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="knowledgeSolution" class="form-label">解决方案</label>
+                            <textarea class="form-control" id="knowledgeSolution" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveKnowledge">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载 Bootstrap 和依赖 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html> 
